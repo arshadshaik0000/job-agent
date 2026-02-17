@@ -1,11 +1,10 @@
 <p align="center">
-  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=700&size=40&pause=1000&color=00D9FF&center=true&vCenter=true&multiline=true&repeat=true&width=800&height=100&lines=🤖+AUTONOMOUS+JOB+DISCOVERY+AGENT" alt="Title" />
+  <img src="https://readme-typing-svg.herokuapp.com/?font=Fira+Code&weight=700&size=40&pause=1000&color=00D9FF&center=true&vCenter=true&width=800&height=100&lines=%F0%9F%A4%96+AUTONOMOUS+JOB+DISCOVERY+AGENT" alt="Title" />
 </p>
 
 <p align="center">
-  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=400&size=18&pause=1000&color=FFD700&center=true&vCenter=true&multiline=true&repeat=true&width=700&height=60&lines=Because+applying+to+jobs+manually+is+SO+2024+🥱;Let+AI+hunt+while+you+sleep+💤;Your+resume+deserves+better+than+Indeed+spam+📬" alt="Subtitle" />
+  <img src="https://readme-typing-svg.herokuapp.com/?font=Fira+Code&weight=400&size=18&pause=1000&color=FFD700&center=true&vCenter=true&width=800&height=60&lines=Because+applying+manually+is+SO+2024+%F0%9F%A5%B1;Let+AI+hunt+while+you+sleep+%F0%9F%92%A4;Your+resume+deserves+better+%F0%9F%93%AC" alt="Subtitle" />
 </p>
-
 <p align="center">
   <a href="#"><img src="https://img.shields.io/badge/python-3.11+-blue?style=for-the-badge&logo=python&logoColor=white" /></a>
   <a href="#"><img src="https://img.shields.io/badge/AI-Ollama_LLaMA3-purple?style=for-the-badge&logo=meta&logoColor=white" /></a>
