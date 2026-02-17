@@ -1,0 +1,1720 @@
+# modules/scraper.py
+import hashlib
+import re
+import sys
+import os
+
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+import time
+import requests
+import logging
+from datetime import datetime
+from bs4 import BeautifulSoup
+
+log = logging.getLogger(__name__)
+
+HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    "Accept-Language": "en-US,en;q=0.5",
+}
+
+ENTRY_KEYWORDS = [
+    "graduate",
+    "junior",
+    "entry level",
+    "entry-level",
+    "associate",
+    "new grad",
+    "early career",
+    "trainee",
+    "fresher",
+    "0-2 years",
+    "0-1 year",
+    "1-2 years",
+    "apprentice",
+    "placement",
+    "newgrad",
+]
+
+SENIOR_KEYWORDS = [
+    "senior",
+    "sr.",
+    "staff",
+    "principal",
+    "lead ",
+    "manager",
+    "director",
+    "head of",
+    "vp ",
+    "vice president",
+    "architect",
+    "chief",
+    "5+ years",
+    "6+ years",
+    "7+ years",
+    "8+ years",
+    "10+ years",
+]
+
+SPONSORSHIP_KEYWORDS = [
+    "visa sponsorship",
+    "sponsorship available",
+    "relocation support",
+    "work visa",
+    "sponsor visa",
+    "relocation package",
+    "visa support",
+    "we sponsor",
+    "international candidates welcome",
+    "work permit provided",
+    "visa provided",
+    "relocation assistance",
+    "will sponsor",
+    "able to sponsor",
+    "sponsoring visas",
+    "support visa",
+    "provide visa",
+    "happy to sponsor",
+    "open to sponsoring",
+    "relocation budget",
+    "global mobility",
+    "visa assistance",
+    "work authorization",
+    "visa support provided",
+    "relocation covered",
+    "we cover relocation",
+    "visa costs covered",
+    "support relocation",
+    "sponsor work",
+    "sponsorship provided",
+    "international applicants",
+    "worldwide applicants",
+    "global applicants",
+]
+
+# ONLY reject if they REQUIRE a non-English language
+# Japanese is OK — Arshad is fine with Japanese companies
+NON_ENGLISH_KEYWORDS = [
+    "german required",
+    "mandarin required",
+    "french required",
+    "dutch required",
+    "korean required",
+    "arabic required",
+    "fluent in german",
+    "fluent german",
+    "deutschkenntnisse",
+    "native mandarin",
+    "native french",
+    "native german",
+    "portuguese required",
+    "spanish required",
+    "italian required",
+    "polish required",
+    "russian required",
+    "turkish required",
+    "must speak german",
+    "must speak french",
+    "must speak mandarin",
+    "german speaker required",
+    "french speaker required",
+]
+
+EXPERIENCE_REJECT = [
+    "5+ years",
+    "6+ years",
+    "7+ years",
+    "8+ years",
+    "10+ years",
+    "minimum 5 years",
+    "at least 5 years",
+    "5 years of experience",
+    "6 years of experience",
+    "7 years of experience",
+    "8 years of experience",
+    "10 years of experience",
+    "minimum of 5",
+    "minimum of 6",
+]
+# ── Tech stack filter ─────────────────────────────────────────────────────────
+
+TECH_STACK_KEYWORDS = [
+    "python",
+    "java",
+    "spring",
+    "spring boot",
+    "react",
+    "react.js",
+    "node",
+    "node.js",
+    "fastapi",
+    "aws",
+    "docker",
+    "postgres",
+    "postgresql",
+    "rest api",
+    "microservice",
+    "microservices",
+    "kubernetes",
+    "api development",
+]
+
+
+def has_required_stack(jd_text):
+    text = jd_text.lower()
+    return any(k in text for k in TECH_STACK_KEYWORDS)
+
+
+def job_hash(job):
+    base = (
+        f"{job.get('company', '')}|{job.get('job_title', '')}|{job.get('country', '')}"
+    )
+    return hashlib.md5(base.lower().encode()).hexdigest()
+
+
+# ── GLOBAL Job searches ────────────────────────────────────────────────────────
+
+JOBSPY_SEARCHES = [
+    # ── India ──
+    {"term": "graduate software engineer", "location": "India", "country": "India"},
+    {"term": "junior backend engineer", "location": "India", "country": "India"},
+    {"term": "junior full stack developer", "location": "India", "country": "India"},
+    {"term": "entry level software engineer", "location": "India", "country": "India"},
+    {"term": "associate software engineer", "location": "India", "country": "India"},
+    {"term": "junior AI engineer", "location": "India", "country": "India"},
+    {"term": "software engineer fresher", "location": "India", "country": "India"},
+    {"term": "junior python developer", "location": "India", "country": "India"},
+    {"term": "junior java developer", "location": "India", "country": "India"},
+    {"term": "entry level data engineer", "location": "India", "country": "India"},
+    {"term": "junior react developer", "location": "India", "country": "India"},
+    {"term": "software engineer", "location": "Bangalore", "country": "India"},
+    {"term": "software engineer", "location": "Hyderabad", "country": "India"},
+    {"term": "software engineer", "location": "Pune", "country": "India"},
+    {"term": "software engineer", "location": "Chennai", "country": "India"},
+    {"term": "software engineer", "location": "Mumbai", "country": "India"},
+    # ── UK ──
+    {
+        "term": "graduate software engineer",
+        "location": "United Kingdom",
+        "country": "United Kingdom",
+    },
+    {
+        "term": "junior developer sponsorship",
+        "location": "London",
+        "country": "United Kingdom",
+    },
+    {
+        "term": "entry level engineer relocation",
+        "location": "United Kingdom",
+        "country": "United Kingdom",
+    },
+    # ── Germany ──
+    {"term": "junior software engineer", "location": "Berlin", "country": "Germany"},
+    {
+        "term": "graduate engineer relocation",
+        "location": "Munich",
+        "country": "Germany",
+    },
+    {"term": "entry level developer", "location": "Hamburg", "country": "Germany"},
+    # ── Netherlands ──
+    {
+        "term": "junior software engineer",
+        "location": "Amsterdam",
+        "country": "Netherlands",
+    },
+    {
+        "term": "entry level developer sponsorship",
+        "location": "Netherlands",
+        "country": "Netherlands",
+    },
+    # ── Ireland ──
+    {"term": "graduate software engineer", "location": "Dublin", "country": "Ireland"},
+    {"term": "junior developer", "location": "Ireland", "country": "Ireland"},
+    # ── UAE ──
+    {"term": "junior software engineer", "location": "Dubai", "country": "UAE"},
+    {"term": "software engineer", "location": "Abu Dhabi", "country": "UAE"},
+    # ── Sweden ──
+    {"term": "junior software engineer", "location": "Stockholm", "country": "Sweden"},
+    {"term": "graduate developer", "location": "Sweden", "country": "Sweden"},
+    # ── Poland ──
+    {"term": "junior software developer", "location": "Warsaw", "country": "Poland"},
+    {"term": "entry level engineer", "location": "Krakow", "country": "Poland"},
+    # ── Spain ──
+    {"term": "junior software engineer", "location": "Barcelona", "country": "Spain"},
+    {"term": "graduate developer", "location": "Madrid", "country": "Spain"},
+    # ── Canada ──
+    {"term": "junior software engineer", "location": "Toronto", "country": "Canada"},
+    {"term": "entry level developer", "location": "Vancouver", "country": "Canada"},
+    # ── Australia ──
+    {
+        "term": "graduate software engineer",
+        "location": "Sydney",
+        "country": "Australia",
+    },
+    {"term": "junior developer", "location": "Melbourne", "country": "Australia"},
+    # ── Singapore ──
+    {
+        "term": "junior software engineer",
+        "location": "Singapore",
+        "country": "Singapore",
+    },
+    {"term": "graduate engineer", "location": "Singapore", "country": "Singapore"},
+    # ── Japan ──
+    {"term": "software engineer english", "location": "Tokyo", "country": "Japan"},
+    {"term": "backend engineer", "location": "Tokyo", "country": "Japan"},
+    {"term": "software engineer", "location": "Osaka", "country": "Japan"},
+    # ── Portugal ──
+    {"term": "junior software engineer", "location": "Lisbon", "country": "Portugal"},
+    {"term": "graduate developer", "location": "Porto", "country": "Portugal"},
+    # ── Czech Republic ──
+    {
+        "term": "junior software engineer",
+        "location": "Prague",
+        "country": "Czech Republic",
+    },
+    # ── Romania ──
+    {"term": "junior software engineer", "location": "Bucharest", "country": "Romania"},
+    # ── Denmark ──
+    {"term": "junior developer", "location": "Copenhagen", "country": "Denmark"},
+    # ── Finland ──
+    {"term": "junior software engineer", "location": "Helsinki", "country": "Finland"},
+    # ── Norway ──
+    {"term": "junior software engineer", "location": "Oslo", "country": "Norway"},
+    # ── Switzerland ──
+    {
+        "term": "junior software engineer",
+        "location": "Zurich",
+        "country": "Switzerland",
+    },
+    {"term": "graduate engineer", "location": "Geneva", "country": "Switzerland"},
+    # ── Austria ──
+    {"term": "junior software engineer", "location": "Vienna", "country": "Austria"},
+    # ── Belgium ──
+    {"term": "junior developer", "location": "Brussels", "country": "Belgium"},
+    # ── South Korea ──
+    {
+        "term": "software engineer english",
+        "location": "Seoul",
+        "country": "South Korea",
+    },
+    # ── Taiwan ──
+    {"term": "software engineer", "location": "Taipei", "country": "Taiwan"},
+    # ── Hong Kong ──
+    {
+        "term": "junior software engineer",
+        "location": "Hong Kong",
+        "country": "Hong Kong",
+    },
+    # ── Israel ──
+    {"term": "junior software engineer", "location": "Tel Aviv", "country": "Israel"},
+    # ── Brazil ──
+    {"term": "junior software engineer", "location": "Sao Paulo", "country": "Brazil"},
+    # ── Mexico ──
+    {
+        "term": "junior software engineer",
+        "location": "Mexico City",
+        "country": "Mexico",
+    },
+    # ── Argentina ──
+    {
+        "term": "junior software engineer",
+        "location": "Buenos Aires",
+        "country": "Argentina",
+    },
+    # ── Remote ──
+    {
+        "term": "remote junior software engineer",
+        "location": "Remote",
+        "country": "Remote",
+    },
+    {"term": "remote entry level developer", "location": "Remote", "country": "Remote"},
+    {"term": "remote graduate engineer", "location": "Remote", "country": "Remote"},
+    {"term": "remote associate engineer", "location": "Remote", "country": "Remote"},
+]
+
+# ── WORLDWIDE Greenhouse companies ────────────────────────────────────────────
+
+GREENHOUSE_COMPANIES = [
+    # 🤖 AI / LLM / ML
+    "openai",
+    "anthropic",
+    "cohere",
+    "mistral",
+    "groq",
+    "together",
+    "perplexity",
+    "huggingface",
+    "stability",
+    "scale",
+    "weights-biases",
+    "inflection",
+    "adept",
+    "aleph-alpha",
+    "runway",
+    "jasper",
+    "character",
+    "pika",
+    "ideogram",
+    "elevenlabs",
+    "synthesis",
+    "deepl",
+    "writer",
+    "copy-ai",
+    "hyperwrite",
+    "aisera",
+    "c3-ai",
+    "datarobot",
+    "h2oai",
+    "oneai",
+    "cohere",
+    "lightmatter",
+    "cerebras",
+    "sambanova",
+    "graphcore",
+    # 💻 Dev Tools / Infrastructure
+    "vercel",
+    "supabase",
+    "railway",
+    "render",
+    "fly",
+    "neon",
+    "turso",
+    "upstash",
+    "xata",
+    "planetscale",
+    "clerk",
+    "resend",
+    "trigger",
+    "inngest",
+    "temporal",
+    "dagster",
+    "prefect",
+    "gitpod",
+    "codeium",
+    "sourcegraph",
+    "replit",
+    "cursor",
+    "fig",
+    "warp",
+    "zed",
+    "raycast",
+    "linear",
+    "retool",
+    "airplane",
+    "appsmith",
+    "tooljet",
+    "budibase",
+    "lowdefy",
+    "hashicorp",
+    "pulumi",
+    "crossplane",
+    "porter",
+    "encore",
+    "dagger",
+    "earthly",
+    "depot",
+    "buildkite",
+    "circleci",
+    "codecov",
+    "sonarqube",
+    "snyk",
+    "debricked",
+    "dependabot",
+    "launchdarkly",
+    "split",
+    "flagsmith",
+    "unleash",
+    "growthbook",
+    # 📊 Data / Analytics
+    "databricks",
+    "dbt-labs",
+    "fivetran",
+    "airbyte",
+    "hightouch",
+    "census",
+    "rudderstack",
+    "segment",
+    "mixpanel",
+    "amplitude",
+    "heap",
+    "posthog",
+    "june",
+    "koala",
+    "june",
+    "pendo",
+    "metabase",
+    "superset",
+    "lightdash",
+    "evidence",
+    "observable",
+    "hex",
+    "deepnote",
+    "noteable",
+    "mode",
+    "sigma",
+    "starburst",
+    "dremio",
+    "imply",
+    "pinot",
+    "clickhouse",
+    "singlestore",
+    "timescale",
+    "questdb",
+    "influxdata",
+    # 💰 Fintech / Payments
+    "stripe",
+    "brex",
+    "mercury",
+    "ramp",
+    "plaid",
+    "unit",
+    "modern-treasury",
+    "lithic",
+    "check",
+    "column",
+    "treasury-prime",
+    "adyen",
+    "mollie",
+    "checkout",
+    "wise",
+    "monzo",
+    "revolut",
+    "n26",
+    "trade-republic",
+    "sumup",
+    "paysafe",
+    "payoneer",
+    "marqeta",
+    "galileo",
+    "synapse",
+    "prime-trust",
+    "alpaca",
+    "robinhood",
+    "coinbase",
+    "kraken",
+    "gemini",
+    "bitpanda",
+    "binance",
+    "okx",
+    "bybit",
+    "kucoin",
+    "crypto-com",
+    "open-sea",
+    "magic-eden",
+    "tensor",
+    "blur",
+    # ☁️ Cloud / DevOps / Security
+    "cloudflare",
+    "fastly",
+    "akamai",
+    "ns1",
+    "bunny",
+    "datadog",
+    "grafana",
+    "sentry",
+    "newrelic",
+    "dynatrace",
+    "lacework",
+    "wiz",
+    "orca",
+    "aqua",
+    "prisma",
+    "crowdstrike",
+    "sentinelone",
+    "okta",
+    "auth0",
+    "beyond-identity",
+    "1password",
+    "bitwarden",
+    "dashlane",
+    "nordvpn",
+    "proton",
+    "tailscale",
+    "netbird",
+    "defined-networking",
+    "twingate",
+    # 🛒 E-commerce / Retail
+    "shopify",
+    "faire",
+    "glossier",
+    "allbirds",
+    "warby-parker",
+    "poshmark",
+    "depop",
+    "vinted",
+    "vestiaire",
+    "farfetch",
+    "mytheresa",
+    "matchesfashion",
+    "net-a-porter",
+    "ssense",
+    "zalando",
+    "aboutyou",
+    "bonprix",
+    "otto",
+    "real",
+    # 🏥 Health Tech
+    "hims-hers",
+    "ro",
+    "nurx",
+    "done",
+    "cerebral",
+    "headspace",
+    "calm",
+    "noom",
+    "whoop",
+    "oura",
+    "tempus",
+    "flatiron",
+    "nuvation",
+    "guardant",
+    "grail",
+    "invitae",
+    "color",
+    "helix",
+    "ancestry",
+    "23andme",
+    # 🏢 HR Tech / Future of Work
+    "rippling",
+    "deel",
+    "remote",
+    "oyster",
+    "papaya-global",
+    "lattice",
+    "culture-amp",
+    "leapsome",
+    "hibob",
+    "personio",
+    "workday",
+    "namely",
+    "gusto",
+    "justworks",
+    "bamboohr",
+    "greenhouse-hr",
+    "lever-hr",
+    "workable-hr",
+    "ashby-hr",
+    "benify",
+    "pleo",
+    "moss",
+    "spendesk",
+    "payhawk",
+    # 🎮 Gaming / Entertainment
+    "unity",
+    "roblox",
+    "discord",
+    "overwolf",
+    "playtika",
+    "superplay",
+    "jam-city",
+    "scopely",
+    "socialpoint",
+    "king",
+    "miniclip",
+    "outfit7",
+    "voodoo",
+    "kwalee",
+    # 🚀 Productivity / Collaboration
+    "notion",
+    "figma",
+    "miro",
+    "loom",
+    "coda",
+    "craft",
+    "linear",
+    "height",
+    "shortcut",
+    "clickup",
+    "monday",
+    "asana",
+    "basecamp",
+    "todoist",
+    "things",
+    "omnifocus",
+    "slite",
+    "almanac",
+    "tettra",
+    "guru",
+    "confluence",
+    "swimlane",
+    "process-st",
+    "trainual",
+    "lessonly",
+    # 📱 Consumer Apps
+    "duolingo",
+    "busuu",
+    "babbel",
+    "preply",
+    "italki",
+    "kahoot",
+    "quizlet",
+    "coursera",
+    "udemy",
+    "skillshare",
+    "masterclass",
+    "brilliant",
+    "khan-academy",
+    "chegg",
+    "doordash",
+    "instacart",
+    "gopuff",
+    "getir",
+    "gorillas",
+    # 🚗 Mobility / Transport
+    "lyft",
+    "bird",
+    "lime",
+    "tier",
+    "voi",
+    "waymo",
+    "cruise",
+    "aurora",
+    "argo",
+    "motional",
+    "flexport",
+    "project44",
+    "fourthwall",
+    "samsara",
+    "motive",
+    # 🏠 Real Estate / PropTech
+    "opendoor",
+    "offerpad",
+    "flyhomes",
+    "orchard",
+    "homeward",
+    "divvy",
+    "landed",
+    "point",
+    "hometap",
+    "unison",
+    "costar",
+    "reonomy",
+    "crexi",
+    "vts",
+    "hqo",
+    # ✈️ Travel / Hospitality
+    "airbnb",
+    "vrbo",
+    "hipcamp",
+    "outdoorsy",
+    "getaround",
+    "hopper",
+    "kiwi",
+    "duffel",
+    "flightright",
+    "travelperk",
+    "hotelbeds",
+    "derbysoft",
+    "amadeus",
+    "sabre",
+    "travelport",
+    # 📣 Marketing / Sales
+    "clearbit",
+    "lusha",
+    "apollo",
+    "outreach",
+    "salesloft",
+    "gong",
+    "chorus",
+    "clari",
+    "people-ai",
+    "6sense",
+    "demandbase",
+    "terminus",
+    "rollworks",
+    "g2",
+    "trustradius",
+    "sendgrid",
+    "mailchimp",
+    "klaviyo",
+    "braze",
+    "iterable",
+    "attentive",
+    "postscript",
+    "yotpo",
+    "okendo",
+    "stamped",
+    # 🌐 Media / Content
+    "substack",
+    "ghost",
+    "medium",
+    "beehiiv",
+    "wordpress",
+    "contentful",
+    "sanity",
+    "prismic",
+    "storyblok",
+    "hygraph",
+    "algolia",
+    "typesense",
+    "meilisearch",
+    "elasticsearch",
+    # 🔗 Integration / Automation
+    "zapier",
+    "make",
+    "pipedream",
+    "n8n",
+    "workato",
+    "tray",
+    "boomi",
+    "mulesoft",
+    "celigo",
+    "cyclr",
+    # 🇯🇵 Japan Tech
+    "mercari",
+    "paypay",
+    "smartnews",
+    "freee",
+    "moneyforward",
+    "sansan",
+    "cyberagent",
+    "indeed-japan",
+    "dmm",
+    "gmo",
+    # 🇸🇬 Southeast Asia
+    "grab",
+    "sea",
+    "shopee",
+    "tokopedia",
+    "bukalapak",
+    "traveloka",
+    "gojek",
+    "carousell",
+    "propertyagent",
+    # 🌍 MENA / Africa
+    "careem",
+    "noon",
+    "talabat",
+    "fetchr",
+    "trella",
+    "swvl",
+    "breadfast",
+    "rabbit",
+    "instashop",
+    "baraka",
+    "paystack",
+    "flutterwave",
+    "opay",
+    "wave",
+    "chipper",
+    # 🌎 LATAM
+    "nubank",
+    "mercadolibre",
+    "rappi",
+    "ifood",
+    "creditas",
+    "nuvemshop",
+    "contabilizei",
+    "loggi",
+    "loft",
+    "quinto-andar",
+]
+
+# ── WORLDWIDE Lever companies ─────────────────────────────────────────────────
+
+LEVER_COMPANIES = [
+    # Big Tech Adjacent
+    "netflix",
+    "dropbox",
+    "atlassian",
+    "zendesk",
+    "hubspot",
+    "salesforce",
+    "servicenow",
+    "workday",
+    "splunk",
+    "elastic",
+    "mongodb",
+    "redis",
+    "cockroachdb",
+    "yugabyte",
+    "couchbase",
+    # Fintech
+    "affirm",
+    "klarna",
+    "afterpay",
+    "sezzle",
+    "zip",
+    "chime",
+    "current",
+    "dave",
+    "brigit",
+    "earnin",
+    "greenlight",
+    "step",
+    "copper",
+    "mozper",
+    # Dev / Cloud
+    "digitalocean",
+    "linode",
+    "vultr",
+    "hetzner",
+    "ovh",
+    "airtable",
+    "webflow",
+    "bubble",
+    "glide",
+    "softr",
+    "retool",
+    "appsmith",
+    "tooljet",
+    "internal",
+    # Data
+    "snowflake",
+    "looker",
+    "metabase",
+    "redash",
+    "chartio",
+    "dune",
+    "flipside",
+    "nansen",
+    "messari",
+    "glassnode",
+    # Security
+    "lacework",
+    "expel",
+    "vectra",
+    "abnormal",
+    "sublime",
+    "proofpoint",
+    "mimecast",
+    "barracuda",
+    "cofense",
+    # Real Estate
+    "opendoor",
+    "offerpad",
+    "flyhomes",
+    "orchard",
+    "homeward",
+    # Logistics
+    "flexport",
+    "project44",
+    "samsara",
+    "motive",
+    "keeptruckin",
+    # HR
+    "bamboohr",
+    "namely",
+    "gusto",
+    "justworks",
+    "rippling",
+    # Media
+    "buzzfeed",
+    "vox",
+    "vice",
+    "axios",
+    "the-information",
+    "substack",
+    "medium",
+    "ghost",
+    "beehiiv",
+    # Travel
+    "airbnb",
+    "vrbo",
+    "hipcamp",
+    "outdoorsy",
+    "hopper",
+    "kiwi",
+    "duffel",
+    "flightright",
+    # Consumer
+    "duolingo",
+    "kahoot",
+    "quizlet",
+    "coursera",
+    "udemy",
+    "masterclass",
+    "brilliant",
+    "chegg",
+    # APAC
+    "grab",
+    "sea",
+    "tokopedia",
+    "carousell",
+    "99-co",
+    "property-guru",
+    "ovo",
+    "dana",
+    "linkaja",
+    # Europe
+    "personio",
+    "pleo",
+    "spendesk",
+    "ramp-europe",
+    "payhawk",
+    "factorial",
+    "kenjo",
+    "cobee",
+    "kymatio",
+    "typeform",
+    "holded",
+    "factorial",
+    "bizaway",
+    "zucchetti",
+    "talentia",
+    "euris",
+    "decidim",
+    # Israel Tech
+    "wix",
+    "monday",
+    "fiverr",
+    "gett",
+    "waze",
+    "ironsource",
+    "inneractive",
+    "perion",
+    "taboola",
+    "outbrain",
+    # Africa
+    "andela",
+    "flutterwave",
+    "paystack",
+    "interswitch",
+    "kuda",
+    "piggyvest",
+    "cowrywise",
+    "carbon",
+    "fairmoney",
+]
+
+# ── WORLDWIDE Ashby companies ─────────────────────────────────────────────────
+
+ASHBY_COMPANIES = [
+    # AI/ML
+    "openai",
+    "anthropic",
+    "mistral",
+    "cohere",
+    "perplexity",
+    "elevenlabs",
+    "runway",
+    "pika",
+    "ideogram",
+    "stability",
+    # Dev Tools
+    "replit",
+    "cursor",
+    "vercel",
+    "supabase",
+    "railway",
+    "linear",
+    "retool",
+    "render",
+    "fly",
+    "planetscale",
+    "turso",
+    "neon",
+    "upstash",
+    "clerk",
+    "resend",
+    "trigger",
+    "inngest",
+    "dagster",
+    "prefect",
+    "temporal",
+    # OSS / Indie
+    "posthog",
+    "cal",
+    "dub",
+    "papermark",
+    "documenso",
+    "formbricks",
+    "twentyhq",
+    "maybe",
+    "actual",
+    "plane",
+    "appflowy",
+    "logseq",
+    "anytype",
+    "chatwoot",
+    "typebot",
+    "activepieces",
+    "windmill",
+    "n8n",
+    "appsmith",
+    "tooljet",
+    "budibase",
+    # Fintech
+    "brex",
+    "mercury",
+    "ramp",
+    "unit",
+    "lithic",
+    "modern-treasury",
+    "check",
+    "column",
+    "stripe",
+    # Data
+    "airbyte",
+    "hightouch",
+    "census",
+    "rudderstack",
+    "fivetran",
+    "dbt-labs",
+    "lightdash",
+    "hex",
+    # Security
+    "wiz",
+    "lacework",
+    "snyk",
+    "semgrep",
+    "endor",
+    # HR
+    "rippling",
+    "deel",
+    "remote",
+    "oyster",
+    "hibob",
+    # Japan
+    "mercari",
+    "freee",
+    "moneyforward",
+    "sansan",
+    # APAC
+    "grab",
+    "sea",
+    "carousell",
+    "99-co",
+]
+
+# ── WORLDWIDE Workable companies ──────────────────────────────────────────────
+
+WORKABLE_COMPANIES = [
+    # EU Startups
+    "taxfix",
+    "revolut",
+    "n26",
+    "trade-republic",
+    "sumup",
+    "personio",
+    "contentful",
+    "ecosia",
+    "babbel",
+    "gorillas",
+    "getir",
+    "jimdo",
+    "raisin",
+    "solarisbank",
+    "penta",
+    "holvi",
+    "moss",
+    "ageras",
+    "pleo",
+    "billy",
+    "leapsome",
+    "kenjo",
+    "factorial",
+    "cobee",
+    "typeform",
+    "holded",
+    "bizaway",
+    "payhawk",
+    "spendesk",
+    # UK Startups
+    "monzo",
+    "starling",
+    "wise",
+    "oaknorth",
+    "iwoca",
+    "liberis",
+    "uncapped",
+    "capchase",
+    "yapily",
+    "truelayer",
+    "form3",
+    "modulr",
+    "checkout",
+    "primer",
+    "acquired",
+    "paddle",
+    "phorest",
+    "brightpearl",
+    "unleashed",
+    # Nordic
+    "klarna",
+    "spotify",
+    "king",
+    "mojang",
+    "paradox",
+    "epidemic-sound",
+    "soundtrack",
+    "kahoot",
+    "whereby",
+    "visma",
+    "tripletex",
+    "spiff",
+    "schibsted",
+    "oda",
+    # Eastern Europe
+    "grammarly",
+    "gitlab",
+    "preply",
+    "petcube",
+    "readdle",
+    "genesis",
+    "playtika",
+    "ciklum",
+    "sigma-software",
+    "intellias",
+    "softserveinc",
+    # MENA
+    "careem",
+    "noon",
+    "talabat",
+    "fetchr",
+    "trella",
+    "swvl",
+    "breadfast",
+    "rabbit",
+    "instashop",
+    "baraka",
+    # Asia Pacific
+    "goto",
+    "grab",
+    "sea",
+    "shopee",
+    "tokopedia",
+    "bukalapak",
+    "traveloka",
+    "ovo",
+    "gojek",
+    "99-co",
+    "property-guru",
+    "carousell",
+    "lalamove",
+    # LATAM
+    "nubank",
+    "mercadolibre",
+    "rappi",
+    "ifood",
+    "creditas",
+    "nuvemshop",
+    "contabilizei",
+    "loggi",
+    "loft",
+    # Africa
+    "andela",
+    "flutterwave",
+    "paystack",
+    "interswitch",
+    "kuda",
+    "piggyvest",
+    "cowrywise",
+    "carbon",
+    "fairmoney",
+    "chipper",
+    # Japan
+    "mercari",
+    "freee",
+    "moneyforward",
+    "sansan",
+    "cyberagent",
+    "dmm",
+    "gmo",
+    "indeed-japan",
+    "smartnews",
+    # Israel
+    "wix",
+    "monday",
+    "fiverr",
+    "gett",
+    "ironsource",
+    "taboola",
+    "outbrain",
+    "perion",
+    "varonis",
+    "cyberark",
+    # India
+    "razorpay",
+    "zerodha",
+    "cred",
+    "groww",
+    "slice",
+    "niyo",
+    "jupiter",
+    "fi-money",
+    "freo",
+    "kreditbee",
+    "meesho",
+    "sharechat",
+    "moj",
+    "glance",
+    "dailyhunt",
+    "ola",
+    "rapido",
+    "yulu",
+    "bounce",
+    "vogo",
+    "byju",
+    "unacademy",
+    "vedantu",
+    "topper",
+    "classplus",
+    "freshworks",
+    "zoho",
+    "chargebee",
+    "postman",
+    "browserstack",
+]
+
+# ── Full JD fetcher ───────────────────────────────────────────────────────────
+
+
+def fetch_full_jd(url, timeout=12):
+    if not url or url == "nan":
+        return ""
+    try:
+        r = requests.get(url, headers=HEADERS, timeout=timeout)
+        if r.status_code != 200:
+            return ""
+        soup = BeautifulSoup(r.text, "html.parser")
+        for tag in soup(["script", "style", "nav", "header", "footer", "aside"]):
+            tag.decompose()
+        for selector in [
+            ".job-description",
+            ".jobDescription",
+            ".description",
+            "#job-description",
+            "#jobDescription",
+            ".posting-description",
+            '[data-qa="job-description"]',
+            ".job-details",
+            ".job_description",
+            ".careers-description",
+            ".job-content",
+            "article",
+            "main",
+        ]:
+            el = soup.select_one(selector)
+            if el:
+                text = el.get_text(separator=" ", strip=True)
+                if len(text) > 200:
+                    return text[:6000]
+        body = soup.find("body")
+        if body:
+            return body.get_text(separator=" ", strip=True)[:6000]
+    except Exception as e:
+        log.debug(f"JD fetch failed {url[:50]}: {e}")
+    return ""
+
+
+# ── Filters ───────────────────────────────────────────────────────────────────
+
+
+def is_entry_level_title(title):
+    t = title.lower()
+    if any(k in t for k in SENIOR_KEYWORDS):
+        return False
+    if any(k in t for k in ENTRY_KEYWORDS):
+        return True
+    if any(
+        k in t
+        for k in [
+            "software engineer",
+            "developer",
+            "ai engineer",
+            "ml engineer",
+            "backend engineer",
+            "fullstack engineer",
+            "full stack engineer",
+            "platform engineer",
+            "data engineer",
+            "devops engineer",
+            "frontend engineer",
+            "mobile engineer",
+            "ios engineer",
+            "android engineer",
+            "cloud engineer",
+            "sre",
+            "site reliability",
+        ]
+    ):
+        return True
+    return False
+
+
+def is_entry_level_jd(jd_text):
+    text = jd_text.lower()
+    if any(k in text for k in EXPERIENCE_REJECT):
+        return False
+    return True
+
+
+def has_sponsorship(jd_text):
+    text = jd_text.lower()
+    return any(k in text for k in SPONSORSHIP_KEYWORDS)
+
+
+def has_non_english(jd_text):
+    text = jd_text.lower()
+    return any(k in text for k in NON_ENGLISH_KEYWORDS)
+
+
+# ── Job builder ───────────────────────────────────────────────────────────────
+
+
+def make_job(title, company, country, url, description="", source=""):
+    return {
+        "job_title": title.strip(),
+        "company": company.strip(),
+        "country": country.strip(),
+        "job_url": url.strip(),
+        "jd_content": description,
+        "source": source,
+        "visa_sponsorship": "unknown",
+        "date_found": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "status": "found",
+        "hr_score": 0,
+        "notes": "",
+        "resume_version": "",
+        "skills_emphasized": "",
+    }
+
+
+# ── Scrapers ──────────────────────────────────────────────────────────────────
+
+
+def scrape_via_jobspy():
+    log.info("🌍 Scraping JobSpy (LinkedIn + Indeed + Glassdoor)...")
+    from jobspy import scrape_jobs
+
+    all_jobs = []
+    for search in JOBSPY_SEARCHES:
+        try:
+            df = scrape_jobs(
+                site_name=["linkedin", "indeed"],
+                search_term=search["term"],
+                location=search["location"],
+                results_wanted=15,
+                hours_old=48,
+                linkedin_fetch_description=False,
+                country_indeed="India" if search["country"] == "India" else "worldwide",
+            )
+            if df is not None and not df.empty:
+                for _, row in df.iterrows():
+                    title = str(row.get("title", ""))
+                    url = str(row.get("job_url", ""))
+                    if not url or url == "nan":
+                        continue
+                    if not is_entry_level_title(title):
+                        continue
+                    all_jobs.append(
+                        make_job(
+                            title=title,
+                            company=str(row.get("company", "")),
+                            country=search["country"],
+                            url=url,
+                            description=str(row.get("description", "")),
+                            source="jobspy",
+                        )
+                    )
+            time.sleep(2)
+        except Exception as e:
+            log.warning(f"  JobSpy [{search['term'][:25]}]: {e}")
+    log.info(f"  ✅ JobSpy: {len(all_jobs)} raw jobs")
+    return all_jobs
+
+
+def scrape_greenhouse():
+    log.info(f"🌿 Scraping Greenhouse ({len(GREENHOUSE_COMPANIES)} companies)...")
+    jobs = []
+    for company in GREENHOUSE_COMPANIES:
+        try:
+            r = requests.get(
+                f"https://boards-api.greenhouse.io/v1/boards/{company}/jobs?content=true",
+                headers=HEADERS,
+                timeout=10,
+            )
+            if r.status_code != 200:
+                continue
+            for job in r.json().get("jobs", []):
+                title = job.get("title", "")
+                if not is_entry_level_title(title):
+                    continue
+                jd = BeautifulSoup(job.get("content", ""), "html.parser").get_text()
+                jobs.append(
+                    make_job(
+                        title=title,
+                        company=company.replace("-", " ").title(),
+                        country=job.get("location", {}).get("name", "Remote"),
+                        url=job.get("absolute_url", ""),
+                        description=jd,
+                        source="greenhouse",
+                    )
+                )
+            time.sleep(0.5)
+        except Exception as e:
+            log.debug(f"  Greenhouse [{company}]: {e}")
+    log.info(f"  ✅ Greenhouse: {len(jobs)} raw jobs")
+    return jobs
+
+
+def scrape_lever():
+    log.info(f"⚙️  Scraping Lever ({len(LEVER_COMPANIES)} companies)...")
+    jobs = []
+    for company in LEVER_COMPANIES:
+        try:
+            r = requests.get(
+                f"https://api.lever.co/v0/postings/{company}?mode=json",
+                headers=HEADERS,
+                timeout=10,
+            )
+            if r.status_code != 200:
+                continue
+            for job in r.json():
+                title = job.get("text", "")
+                if not is_entry_level_title(title):
+                    continue
+                desc = " ".join(
+                    block.get("text", "")
+                    for block in job.get("descriptionBody", {}).get("body", [])
+                    if isinstance(block, dict)
+                )
+                jobs.append(
+                    make_job(
+                        title=title,
+                        company=company.replace("-", " ").title(),
+                        country=job.get("categories", {}).get("location", "Remote"),
+                        url=job.get("hostedUrl", ""),
+                        description=desc,
+                        source="lever",
+                    )
+                )
+            time.sleep(0.5)
+        except Exception as e:
+            log.debug(f"  Lever [{company}]: {e}")
+    log.info(f"  ✅ Lever: {len(jobs)} raw jobs")
+    return jobs
+
+
+def scrape_ashby():
+    log.info(f"🔷 Scraping Ashby ({len(ASHBY_COMPANIES)} companies)...")
+    jobs = []
+    for company in ASHBY_COMPANIES:
+        try:
+            payload = {
+                "operationName": "ApiJobBoardWithTeams",
+                "variables": {"organizationHostedJobsPageName": company},
+                "query": """query ApiJobBoardWithTeams($organizationHostedJobsPageName: String!) {
+                    jobBoard: jobBoardWithTeams(organizationHostedJobsPageName: $organizationHostedJobsPageName) {
+                        jobPostings { id title locationName jobPostingState descriptionHtml externalLink }
+                    }
+                }""",
+            }
+            r = requests.post(
+                "https://jobs.ashbyhq.com/api/non-user-graphql?op=ApiJobBoardWithTeams",
+                json=payload,
+                headers=HEADERS,
+                timeout=10,
+            )
+            if r.status_code != 200:
+                continue
+            postings = (
+                r.json().get("data", {}).get("jobBoard", {}).get("jobPostings", [])
+            )
+            for job in postings:
+                title = job.get("title", "")
+                if not is_entry_level_title(title):
+                    continue
+                if job.get("jobPostingState") != "Listed":
+                    continue
+                jd = BeautifulSoup(
+                    job.get("descriptionHtml", ""), "html.parser"
+                ).get_text()
+                job_url = (
+                    job.get("externalLink")
+                    or f"https://jobs.ashbyhq.com/{company}/{job.get('id')}"
+                )
+                jobs.append(
+                    make_job(
+                        title=title,
+                        company=company.replace("-", " ").title(),
+                        country=job.get("locationName", "Remote"),
+                        url=job_url,
+                        description=jd,
+                        source="ashby",
+                    )
+                )
+            time.sleep(0.5)
+        except Exception as e:
+            log.debug(f"  Ashby [{company}]: {e}")
+    log.info(f"  ✅ Ashby: {len(jobs)} raw jobs")
+    return jobs
+
+
+def scrape_workable():
+    log.info(f"🔧 Scraping Workable ({len(WORKABLE_COMPANIES)} companies)...")
+    jobs = []
+    for company in WORKABLE_COMPANIES:
+        try:
+            r = requests.post(
+                f"https://apply.workable.com/api/v3/accounts/{company}/jobs",
+                json={
+                    "query": "",
+                    "location": [],
+                    "department": [],
+                    "worktype": [],
+                    "remote": [],
+                },
+                headers=HEADERS,
+                timeout=10,
+            )
+            if r.status_code != 200:
+                continue
+            for job in r.json().get("results", []):
+                title = job.get("title", "")
+                if not is_entry_level_title(title):
+                    continue
+                job_url = (
+                    f"https://apply.workable.com/{company}/j/{job.get('shortcode')}/"
+                )
+                jobs.append(
+                    make_job(
+                        title=title,
+                        company=company.replace("-", " ").title(),
+                        country=job.get("location", {}).get("country", "Remote"),
+                        url=job_url,
+                        description=job.get("description", ""),
+                        source="workable",
+                    )
+                )
+            time.sleep(0.5)
+        except Exception as e:
+            log.debug(f"  Workable [{company}]: {e}")
+    log.info(f"  ✅ Workable: {len(jobs)} raw jobs")
+    return jobs
+
+
+# ── Deduplicate ───────────────────────────────────────────────────────────────
+
+
+def deduplicate(jobs):
+    seen_urls = set()
+    seen_hash = set()
+    unique = []
+
+    for job in jobs:
+        url = job.get('job_url', '')
+        h   = job_hash(job)
+
+        if (url and url in seen_urls) or h in seen_hash:
+            continue
+
+        seen_urls.add(url)
+        seen_hash.add(h)
+        unique.append(job)
+
+    return unique
+
+def extract_experience_years(text):
+    text = text.lower()
+    matches = re.findall(r"(\d+)\s*\+?\s*(?:years|yrs)", text)
+    if not matches:
+        return 0
+    nums = [int(m) for m in matches]
+    return max(nums)
+
+
+# ── Deep filter — fetch full JD and validate ──────────────────────────────────
+
+
+def deep_filter(jobs, is_india):
+    passed = []
+    total = len(jobs)
+    for i, job in enumerate(jobs, 1):
+        title = job.get("job_title", "")
+        url = job.get("job_url", "")
+        country = job.get("country", "")
+        jd = job.get("jd_content", "")
+
+        log.info(f"  🔍 [{i}/{total}] {job.get('company', '')[:20]} — {title[:35]}")
+
+        # Fetch full JD if too short
+        if len(jd) < 300:
+            jd = fetch_full_jd(url)
+            job["jd_content"] = jd
+
+        if not jd:
+            log.info(f"       ⏭️  No JD — skip")
+            continue
+
+        # Re-check title
+        if not is_entry_level_title(title):
+            log.info(f"       ❌ Senior title")
+            continue
+
+        # Check experience in full JD (real numeric extraction)
+        years = extract_experience_years(jd)
+
+        if years >= 3:
+            log.info(f"       ❌ Requires {years}+ years experience")
+            continue
+
+        # Language check — reject ONLY if a non-English language is REQUIRED
+        if has_non_english(jd):
+            log.info(f"       ❌ Non-English language required")
+            continue
+
+        # Tech stack check
+        if not has_required_stack(jd):
+            log.info(f"       ❌ Tech stack mismatch")
+            continue
+
+        # Visa check
+        if is_india or "india" in country.lower():
+            job["visa_sponsorship"] = "not_required"
+        elif has_sponsorship(jd):
+            job["visa_sponsorship"] = "sponsored"
+            log.info(f"       💼 Visa/relocation sponsorship confirmed!")
+        else:
+            log.info(f"       ❌ No sponsorship mentioned")
+            continue
+
+        log.info(f"       ✅ PASSED all filters!")
+        passed.append(job)
+        time.sleep(0.5)
+
+    return passed
+
+
+# ── Main ──────────────────────────────────────────────────────────────────────
+
+
+def discover_jobs():
+    all_jobs = []
+    all_jobs += scrape_via_jobspy()
+    all_jobs += scrape_greenhouse()
+    all_jobs += scrape_lever()
+    all_jobs += scrape_ashby()
+    all_jobs += scrape_workable()
+
+    unique = deduplicate(all_jobs)
+    log.info(f"\n📊 Raw: {len(all_jobs)} | Deduped: {len(unique)}")
+
+    india_jobs = [j for j in unique if "india" in j.get("country", "").lower()]
+    intl_jobs = [j for j in unique if "india" not in j.get("country", "").lower()]
+
+    log.info(f"🇮🇳 India: {len(india_jobs)} | 🌍 International: {len(intl_jobs)}")
+
+    log.info("\n🔬 Deep filtering India jobs...")
+    india_passed = deep_filter(india_jobs, is_india=True)
+
+    log.info("\n🔬 Deep filtering International jobs...")
+    intl_passed = deep_filter(intl_jobs, is_india=False)
+
+    final = india_passed + intl_passed
+    log.info(f"\n🎯 Final valid jobs: {len(final)}")
+    return final
+
+
+if __name__ == "__main__":
+    jobs = discover_jobs()
+    print(f"\n✅ Total valid jobs: {len(jobs)}")
+    for j in jobs[:20]:
+        print(
+            f"  [{j['source'].upper()}] [{j['country']}] {j['company']} — {j['job_title']}"
+        )
+        print(f"  Visa: {j['visa_sponsorship']}")
+        print(f"  {j['job_url'][:70]}\n")
