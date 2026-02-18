@@ -1,45 +1,84 @@
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- 🎨 ANIMATED HEADER BANNER                                         -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+
 <p align="center">
-  <img src="https://readme-typing-svg.herokuapp.com/?font=Fira+Code&weight=700&size=40&pause=1000&color=00D9FF&center=true&vCenter=true&width=800&height=100&lines=%F0%9F%A4%96+AUTONOMOUS+JOB+DISCOVERY+AGENT" alt="Title" />
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:00D9FF,50:667EEA,100:764BA2&height=220&section=header&text=🤖%20AUTONOMOUS%20JOB%20AGENT&fontSize=42&fontColor=FFFFFF&animation=fadeIn&fontAlignY=35&desc=AI-Powered%20Job%20Discovery%20%E2%80%A2%20Zero%20Manual%20Effort&descSize=18&descAlignY=55&descColor=FFD700" alt="Header Banner" width="100%"/>
+</p>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- 🔗 NAVIGATION BADGES                                              -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+
+<p align="center">
+  <a href="#-quick-start"><img src="https://img.shields.io/badge/QUICK_START-00D9FF?style=for-the-badge&logo=rocket&logoColor=white" alt="Quick Start"/></a>
+  <a href="#️-architecture--the-brain"><img src="https://img.shields.io/badge/ARCHITECTURE-667EEA?style=for-the-badge&logo=buffer&logoColor=white" alt="Architecture"/></a>
+  <a href="#-the-scoring-system--how-jobs-get-judged"><img src="https://img.shields.io/badge/SCORING-764BA2?style=for-the-badge&logo=target&logoColor=white" alt="Scoring"/></a>
+  <a href="#-the-ai-layer--ollama-validation"><img src="https://img.shields.io/badge/AI_ENGINE-F093FB?style=for-the-badge&logo=meta&logoColor=white" alt="AI Engine"/></a>
+  <a href="#-coverage--we-scrape-everywhere"><img src="https://img.shields.io/badge/COVERAGE-4ADE80?style=for-the-badge&logo=googlemaps&logoColor=white" alt="Coverage"/></a>
+</p>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- 🏷️ TECH BADGES                                                    -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+
+<p align="center">
+  <img src="https://img.shields.io/badge/python-3.11+-3776ab?logo=python&logoColor=white" alt="Python"/>
+  <img src="https://img.shields.io/badge/AI-Ollama_LLaMA3-8B5CF6?logo=meta&logoColor=white" alt="Ollama"/>
+  <img src="https://img.shields.io/badge/async-aiohttp-2563EB?logo=aiohttp&logoColor=white" alt="aiohttp"/>
+  <img src="https://img.shields.io/badge/notify-Telegram-26A5E4?logo=telegram&logoColor=white" alt="Telegram"/>
+  <img src="https://img.shields.io/badge/data-SQLite-003B57?logo=sqlite&logoColor=white" alt="SQLite"/>
+  <img src="https://img.shields.io/badge/export-Excel-217346?logo=microsoftexcel&logoColor=white" alt="Excel"/>
 </p>
 
 <p align="center">
-  <img src="https://readme-typing-svg.herokuapp.com/?font=Fira+Code&weight=400&size=18&pause=1000&color=FFD700&center=true&vCenter=true&width=800&height=60&lines=Because+applying+manually+is+SO+2024+%F0%9F%A5%B1;Let+AI+hunt+while+you+sleep+%F0%9F%92%A4;Your+resume+deserves+better+%F0%9F%93%AC" alt="Subtitle" />
-</p>
-<p align="center">
-  <a href="#"><img src="https://img.shields.io/badge/python-3.11+-blue?style=for-the-badge&logo=python&logoColor=white" /></a>
-  <a href="#"><img src="https://img.shields.io/badge/AI-Ollama_LLaMA3-purple?style=for-the-badge&logo=meta&logoColor=white" /></a>
-  <a href="#"><img src="https://img.shields.io/badge/async-aiohttp-green?style=for-the-badge&logo=aiohttp&logoColor=white" /></a>
-  <a href="#"><img src="https://img.shields.io/badge/notify-Telegram_Bot-blue?style=for-the-badge&logo=telegram&logoColor=white" /></a>
-  <a href="#"><img src="https://img.shields.io/badge/data-SQLite-orange?style=for-the-badge&logo=sqlite&logoColor=white" /></a>
-  <a href="#"><img src="https://img.shields.io/badge/export-Excel-darkgreen?style=for-the-badge&logo=microsoftexcel&logoColor=white" /></a>
+  <img src="https://img.shields.io/badge/Jobs_Discovered-1000+-4ADE80?style=flat-square&logo=checkmarx&logoColor=white" />
+  <img src="https://img.shields.io/badge/Countries-30+-60A5FA?style=flat-square&logo=googlemaps&logoColor=white" />
+  <img src="https://img.shields.io/badge/ATS_Platforms-5-F59E0B?style=flat-square&logo=buffer&logoColor=white" />
+  <img src="https://img.shields.io/badge/Filter_Layers-4-EF4444?style=flat-square&logo=shield&logoColor=white" />
+  <img src="https://img.shields.io/badge/Senior_Jobs-OBLITERATED-DC2626?style=flat-square&logo=fireship&logoColor=white" />
 </p>
 
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- ⌨️ TYPING ANIMATION                                               -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+
 <p align="center">
-  <img src="https://img.shields.io/badge/Jobs_Discovered-1000+-brightgreen?style=flat-square" />
-  <img src="https://img.shields.io/badge/Countries-30+-blue?style=flat-square" />
-  <img src="https://img.shields.io/badge/Companies-500+-orange?style=flat-square" />
-  <img src="https://img.shields.io/badge/Filters-4_Layers-red?style=flat-square" />
-  <img src="https://img.shields.io/badge/Senior_Jobs-OBLITERATED-crimson?style=flat-square" />
+  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&pause=1000&color=00D9FF&center=true&vCenter=true&width=750&lines=Because+applying+manually+is+SO+2024+🥱;AI+hunts+while+you+sleep+💤;10-step+autonomous+pipeline+🔥;Ollama+LLaMA3+validates+every+job+locally+🤖;30%2B+countries+•+500%2B+companies+•+zero+API+bills;Your+resume+deserves+better+📬" alt="Typing SVG" />
 </p>
 
 ---
 
-## 🤔 The Problem
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- 🤔 THE PROBLEM                                                    -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+
+## <img src="https://media.giphy.com/media/WUlplcMpOCEmTGBtBW/giphy.gif" width="30"> The Problem
 
 > *"I just graduated with a B.Tech in CSE (AI & ML)... and LinkedIn thinks I need 10 years of experience to be a 'Junior Developer'."*
 
 Sound familiar? You spend hours scrolling through job boards, only to find:
 
-- 🧓 "Junior" roles that want 5+ years of experience *(sir, that's a senior role in disguise)*
-- 🌍 International roles with zero visa info *(surprise! figure it out yourself)*
-- 📬 The same 20 jobs recycled across 5 platforms
-- 🤖 Generic "software engineer" listings that are actually for COBOL maintenance
+<table>
+<tr>
+<td>🧓</td><td><strong>"Junior" roles</strong> that want 5+ years of experience <em>(sir, that's a senior role in disguise)</em></td>
+</tr>
+<tr>
+<td>🌍</td><td><strong>International roles</strong> with zero visa info <em>(surprise! figure it out yourself)</em></td>
+</tr>
+<tr>
+<td>📬</td><td><strong>The same 20 jobs</strong> recycled across 5 platforms</td>
+</tr>
+<tr>
+<td>🤖</td><td><strong>Generic listings</strong> that are actually for COBOL maintenance</td>
+</tr>
+</table>
 
 **This agent was born out of pure frustration.** It doesn't just scrape — it **hunts**, **thinks**, and **validates** using AI.
 
 ---
 
-## 🧠 What Makes This Different?
+## ✨ What Makes This Different?
 
 <table>
 <tr>
@@ -69,6 +108,26 @@ Sound familiar? You spend hours scrolling through job boards, only to find:
 </td>
 </tr>
 </table>
+
+<details>
+<summary><strong>🏆 Full Capability Matrix (click to expand)</strong></summary>
+<br>
+
+| Capability | Description | Module |
+|:-----------|:------------|:-------|
+| 🌍 **Web Discovery** | Finds career pages via DuckDuckGo | `web_discovery.py` |
+| 🕸️ **Async Crawling** | Concurrent career page crawling | `career_crawler.py` |
+| 🧩 **Multi-ATS Parsing** | Greenhouse, Lever, Ashby, Workable | `parsing/*.py` |
+| 🌐 **Generic HTML** | Parse ANY career page on the web | `generic_html.py` |
+| 📊 **Rule Scoring** | Weighted title + JD scoring | `rule_scoring.py` |
+| 🔎 **Experience Parse** | Regex year extraction + intern auto-pass | `experience_parser.py` |
+| ✈️ **Visa Filter** | Sponsorship detection & scoring | `visa_filter.py` |
+| 🤖 **AI Validation** | Final boss — local Ollama LLaMA3 | `ollama_validator.py` |
+| 💾 **Database** | SQLite with dedup + caching | `tracker.py` |
+| 📱 **Notifications** | Real-time Telegram alerts | `notifier.py` |
+| 📊 **Export** | Daily Excel reports | `exporter.py` |
+
+</details>
 
 ---
 
@@ -106,48 +165,28 @@ graph TD
 
 > *Think of it as a 10-stage interview... but for jobs. Only the worthy survive.* 💀
 
----
+<details>
+<summary><strong>🔰 Explain this to me like I'm a beginner (click to expand)</strong></summary>
+<br>
 
-## 📂 Project Structure
+Think of it like a personal assistant sorting your mail:
 
-```
-job-agent/
-│
-├── 🧠 main.py                          # The brain — runs the 10-step pipeline
-├── ⚙️ config.py                         # All settings, API keys, thresholds
-├── 📦 requirements.txt                  # Dependencies
-├── 🗄️ jobs.db                           # SQLite database (auto-created)
-├── 📊 jobs_export.xlsx                  # Daily Excel export
-├── 🔒 .env                             # Secrets (API keys, Telegram token)
-│
-└── modules/
-    ├── 🌍 discovery/
-    │   └── web_discovery.py             # DuckDuckGo → find career domains
-    │
-    ├── 🕸️ crawling/
-    │   └── career_crawler.py            # Async aiohttp → detect career pages
-    │
-    ├── 🧩 parsing/
-    │   ├── greenhouse.py                # Greenhouse ATS API
-    │   ├── lever.py                     # Lever ATS API
-    │   ├── ashby.py                     # Ashby GraphQL API
-    │   ├── workable.py                  # Workable REST API
-    │   └── generic_html.py              # Parse ANY career page on the web
-    │
-    ├── 🎯 filtering/
-    │   ├── rule_scoring.py              # Weighted title + JD scoring
-    │   ├── experience_parser.py         # Years extraction, intern auto-pass
-    │   ├── visa_filter.py               # Sponsorship scoring
-    │   └── ollama_validator.py          # 🤖 Local AI — final authority
-    │
-    ├── 📱 notifier.py                   # Telegram bot notifications
-    ├── 📊 exporter.py                   # Excel export
-    └── 💾 tracker.py                    # SQLite database layer
-```
+| Stage | Analogy | What It Does |
+|:------|:--------|:-------------|
+| **Discover** | 🗺️ Mapping the neighborhood | Finds new companies with career pages |
+| **Crawl** | � Walking to each mailbox | Visits each career page asynchronously |
+| **Parse** | 📬 Opening each envelope | Extracts job title, description, location |
+| **Rule Score** | ⚖️ Weighing importance | Assigns points based on keywords |
+| **Experience** | 🔎 Reading the fine print | Detects hidden seniority requirements |
+| **Visa** | ✈️ Checking passport needs | Filters by sponsorship availability |
+| **AI Validate** | 🧠 Second opinion from expert | Ollama LLaMA3 gives final verdict |
+| **Save** | �️ Filing the keepers | Stores in SQLite with deduplication |
+| **Notify** | 📱 Pinging your phone | Sends rich Telegram messages |
+| **Export** | 📊 Daily summary | Generates Excel report |
 
-> *"But wait, wasn't this all in one 1700-line file before?"*
->
-> **Yes. We don't talk about that anymore.** 🫣
+**The key insight:** Each stage is **independent and testable**. A bug in the visa filter cannot break the parser. A flaky AI response cannot corrupt the database.
+
+</details>
 
 ---
 
@@ -155,10 +194,11 @@ job-agent/
 
 Every job goes through a **courtroom trial** before it reaches your Telegram:
 
-### 📋 Title Scoring
+<details open>
+<summary><strong>📋 Title Scoring</strong></summary>
 
 | Signal | Points | Example |
-|--------|--------|---------|
+|:-------|:------:|:--------|
 | `internship` / `intern` | **+4** | ✅ "Software Engineering Intern" |
 | `graduate` / `junior` | **+3** | ✅ "Graduate Backend Developer" |
 | `associate` / `entry level` | **+2** | ✅ "Associate Engineer" |
@@ -167,34 +207,66 @@ Every job goes through a **courtroom trial** before it reaches your Telegram:
 | `director` / `manager` | **-6** | ❌ "Director of Engineering" |
 | `principal` / `architect` | **-6** | ❌ "Principal Architect" |
 
-### 📄 JD Text Scoring
+</details>
+
+<details open>
+<summary><strong>📄 JD Text Scoring</strong></summary>
 
 | Signal | Points |
-|--------|--------|
+|:-------|:------:|
 | `"internship"` in JD | **+3** |
 | `"0-2 years"` / `"new grad"` | **+2** |
 | `"5+ years"` / `"7+ years"` | **-4** |
 | `"technical leadership"` | **-3** |
 | `"managed a team"` | **-4** |
 
+</details>
+
 > **Verdict: ACCEPT if score ≥ 2.** Anything below? 🔨 *REJECTED.*
 
-### Real Examples:
+<details>
+<summary><strong>🔥 Real Scoring Examples (click to expand)</strong></summary>
+<br>
 
 ```
-"Senior Staff Engineer"     → Score: -17  → 🗑️ OBLITERATED
-"Software Engineering Intern" → Score: +12  → ✅ WELCOME ABOARD
-"Junior Backend Developer"  → Score: +7   → ✅ COME ON IN
-"Director of Engineering"   → Score: -8   → 🗑️ NICE TRY
+"Senior Staff Engineer"        → Score: -17  → 🗑️ OBLITERATED
+"Software Engineering Intern"  → Score: +12  → ✅ WELCOME ABOARD
+"Junior Backend Developer"     → Score: +7   → ✅ COME ON IN
+"Director of Engineering"      → Score: -8   → 🗑️ NICE TRY
 ```
 
 > *The scoring system has no chill. Exactly how we like it.* 😤
+
+</details>
 
 ---
 
 ## 🤖 The AI Layer — Ollama Validation
 
 After surviving the scoring gauntlet, every job faces **one final boss**:
+
+<table>
+<tr>
+<td width="50%">
+
+### ✅ What AI Does
+- Analyzes title + 2000 chars of JD
+- Returns: **ACCEPT/REJECT** + confidence %
+- Results cached in SQLite (no re-processing)
+- Graceful fallback if offline
+
+</td>
+<td width="50%">
+
+### 🚫 What AI Cannot Do
+- ~~Modify the database~~
+- ~~Skip the rules engine~~
+- ~~Approve senior roles~~
+- ~~Cost you money~~ (runs 100% locally)
+
+</td>
+</tr>
+</table>
 
 ```
 ┌─────────────────────────────────────────────────┐
@@ -223,7 +295,7 @@ After surviving the scoring gauntlet, every job faces **one final boss**:
 ### ATS Platforms (500+ companies)
 
 | Platform | Companies | Method |
-|----------|-----------|--------|
+|:---------|:----------|:-------|
 | 🌿 **Greenhouse** | OpenAI, Stripe, Vercel, Notion, Figma... | REST API |
 | ⚙️ **Lever** | Netflix, Dropbox, Atlassian, MongoDB... | REST API |
 | 🔷 **Ashby** | Anthropic, Cursor, Supabase, Linear... | GraphQL |
@@ -241,22 +313,21 @@ DuckDuckGo → "junior software engineer careers"
            → 📱 Telegram: "New job found!"
 ```
 
-### 🗺️ Countries Covered
+<details>
+<summary><strong>🗺️ Countries Covered — 30+ (click to expand)</strong></summary>
+<br>
 
-```
-🇮🇳 India (primary)          🇬🇧 UK              🇩🇪 Germany
-🇳🇱 Netherlands              🇮🇪 Ireland          🇦🇪 UAE
-🇸🇪 Sweden                   🇨🇦 Canada           🇦🇺 Australia
-🇸🇬 Singapore                🇯🇵 Japan            🇵🇹 Portugal
-🇨🇿 Czech Republic           🇷🇴 Romania          🇩🇰 Denmark
-🇫🇮 Finland                  🇳🇴 Norway           🇨🇭 Switzerland
-🇦🇹 Austria                  🇧🇪 Belgium          🇰🇷 South Korea
-🇹🇼 Taiwan                   🇭🇰 Hong Kong        🇮🇱 Israel
-🇧🇷 Brazil                   🇲🇽 Mexico           🇦🇷 Argentina
-🌐 Remote                    🇵🇱 Poland           🇪🇸 Spain
-```
+| Region | Countries |
+|:-------|:----------|
+| � **Asia** | �🇮🇳 India (primary) · 🇸🇬 Singapore · 🇯🇵 Japan · 🇰🇷 South Korea · �� Taiwan · 🇭🇰 Hong Kong · 🇮🇱 Israel · 🇦🇪 UAE |
+| 🌍 **Europe** | 🇬🇧 UK · 🇩🇪 Germany · 🇳🇱 Netherlands · 🇮🇪 Ireland · 🇸🇪 Sweden ·  Portugal · 🇨🇿 Czech · 🇷🇴 Romania · 🇩🇰 Denmark · 🇫🇮 Finland · 🇳🇴 Norway · 🇨🇭 Switzerland · 🇦🇹 Austria · 🇧🇪 Belgium · �� Poland · �� Spain |
+| 🌎 **Americas** | �� Canada · 🇧🇷 Brazil · 🇲🇽 Mexico · 🇦🇷 Argentina |
+| � **Oceania** | �� Australia |
+| 🌐 **Other** | Remote (Anywhere) |
 
 > *30+ countries. Because your dream job might be in Helsinki and you just don't know it yet.* 🇫🇮
+
+</details>
 
 ---
 
@@ -265,7 +336,7 @@ DuckDuckGo → "junior software engineer careers"
 Not all jobs are created equal when you're international:
 
 | Scenario | Action |
-|----------|--------|
+|:---------|:-------|
 | 🇮🇳 India job | ✅ Auto-pass (no visa needed) |
 | 🌐 Remote internship | ✅ Auto-pass |
 | "Visa sponsorship available" | ✅ **+3 points** |
@@ -295,21 +366,12 @@ Companies love to hide experience requirements in walls of text. Not anymore:
 
 ## 🚀 Quick Start
 
-### Prerequisites
+> **Prerequisites:** Python 3.11+ · Ollama with LLaMA 3 · Telegram Bot Token
+
+<details open>
+<summary><strong>📦 Step 1 — Clone & Install</strong></summary>
 
 ```bash
-# Python 3.11+
-python3 --version
-
-# Ollama (local AI)
-ollama --version
-ollama pull llama3
-```
-
-### Installation
-
-```bash
-# Clone
 git clone https://github.com/yourusername/job-agent.git
 cd job-agent
 
@@ -322,7 +384,10 @@ source venv/bin/activate   # macOS/Linux
 pip install -r requirements.txt
 ```
 
-### Configuration
+</details>
+
+<details open>
+<summary><strong>🔧 Step 2 — Configure</strong></summary>
 
 Create `.env` file:
 
@@ -345,7 +410,10 @@ MIN_HR_SCORE=70
 OLLAMA_MODEL=llama3:latest
 ```
 
-### Run
+</details>
+
+<details open>
+<summary><strong>🚀 Step 3 — Launch</strong></summary>
 
 ```bash
 # Make sure Ollama is running
@@ -355,13 +423,76 @@ ollama serve &
 python main.py
 ```
 
+</details>
+
 <p align="center">
-  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=16&pause=1000&color=00FF88&center=true&vCenter=true&width=500&height=30&lines=🚀+Agent+started...;🌍+Discovering+domains...;🕸️+Crawling+career+pages...;🧩+Parsing+jobs...;📊+Scoring+candidates...;🤖+AI+validating...;📱+Sending+Telegram+alerts...;✅+Cycle+complete!+Sleeping+2+min..." alt="Running" />
+  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=16&pause=1000&color=00FF88&center=true&vCenter=true&width=550&height=30&lines=🚀+Agent+started...;🌍+Discovering+domains...;🕸️+Crawling+career+pages...;🧩+Parsing+jobs...;📊+Scoring+candidates...;🤖+AI+validating...;📱+Sending+Telegram+alerts...;✅+Cycle+complete!+Sleeping+2+min..." alt="Running" />
 </p>
 
 ---
 
+## ⏰ How It Works (A Day in the Life)
+
+```
+🌅 6:00 AM — You're sleeping. The agent is not.
+
+  � Scan cycle #47 started...
+  
+  🌍 DISCOVER: Searching DuckDuckGo for "junior software engineer careers"
+      🆕 Found: coolstartup.io
+      🆕 Found: techcompany.dev
+  
+  🕸️ CRAWL: Checking coolstartup.io/careers...
+      ✅ Found 3 job links
+  
+  🧩 PARSE: Extracting from Greenhouse, Lever, Ashby, Workable...
+      �📊 Total raw: 847 jobs | Deduped: 412
+  
+  🎯 FILTER:
+      📊 Rule scoring: 312 rejected (too senior)
+      🔎 Experience: 28 rejected (3+ years required)  
+      ✈️ Visa: 19 rejected (no sponsorship)
+      🤖 Ollama: 8 rejected (AI said NOPE)
+  
+  ✅ 45 jobs passed all filters!
+  
+  💾 Saved 12 new jobs (33 were duplicates)
+  📱 Telegram: 12 notifications sent
+  📊 Excel exported: jobs_export.xlsx
+  
+  ⏳ Sleeping 2 minutes...
+
+🌅 6:02 AM — Cycle #48 begins. You're still sleeping. Living your best life.
+```
+
+> *The agent has applied to more jobs before breakfast than most people do in a week.* 🏆
+
+---
+
+## 📱 Telegram Alerts
+
+Every new valid job triggers a Telegram message:
+
+```
+🚀 New Job Found!
+
+🏢 Company: OpenAI
+💼 Role: Software Engineering Intern
+🌍 Location: San Francisco, CA
+📡 Source: greenhouse
+✈️ Visa: sponsored
+🔗 Apply Here
+
+Score: 12 | AI: 95% | "Entry-level intern role, perfect for 2025 graduate"
+```
+
+---
+
 ## 📊 Database Schema
+
+<details>
+<summary><strong>💾 Full Schema (click to expand)</strong></summary>
+<br>
 
 ```sql
 -- 💾 Jobs (the main event)
@@ -389,6 +520,8 @@ daily_stats (
 )
 ```
 
+</details>
+
 ---
 
 ## 🛠️ Tech Stack
@@ -396,64 +529,77 @@ daily_stats (
 <p align="center">
 
 | Layer | Technology | Why |
-|-------|-----------|-----|
-| 🐍 Language | Python 3.11+ | Because we're not animals |
-| 🤖 AI | Ollama + LLaMA 3 | Local, free, no API bills |
-| 🌐 Discovery | DuckDuckGo Search | No API key needed |
-| 🕸️ Crawling | aiohttp (async) | Fast concurrent crawling |
-| 🧩 Parsing | BeautifulSoup4 | HTML parsing Swiss army knife |
-| 📡 ATS APIs | Greenhouse, Lever, Ashby, Workable | Direct API access |
-| 🔍 Job Boards | python-jobspy | LinkedIn + Indeed |
-| 💾 Database | SQLite | Zero config, portable |
-| 📱 Notifications | python-telegram-bot | Real-time alerts |
-| 📊 Export | openpyxl | Excel reports |
-| 🔐 Config | python-dotenv | Environment variables |
+|:------|:-----------|:----|
+| 🐍 **Language** | Python 3.11+ | Because we're not animals |
+| 🤖 **AI** | Ollama + LLaMA 3 | Local, free, no API bills |
+| 🌐 **Discovery** | DuckDuckGo Search | No API key needed |
+| 🕸️ **Crawling** | aiohttp (async) | Fast concurrent crawling |
+| 🧩 **Parsing** | BeautifulSoup4 | HTML parsing Swiss army knife |
+| 📡 **ATS APIs** | Greenhouse, Lever, Ashby, Workable | Direct API access |
+| 🔍 **Job Boards** | python-jobspy | LinkedIn + Indeed |
+| 💾 **Database** | SQLite | Zero config, portable |
+| 📱 **Notifications** | python-telegram-bot | Real-time alerts |
+| 📊 **Export** | openpyxl | Excel reports |
+| 🔐 **Config** | python-dotenv | Environment variables |
 
 </p>
 
 ---
 
-## ⏰ How It Works (A Day in the Life)
+## 📂 Project Structure
+
+<details>
+<summary><strong>🗂️ Full file tree (click to expand)</strong></summary>
+<br>
 
 ```
-🌅 6:00 AM — You're sleeping. The agent is not.
-
-  🔁 Scan cycle #47 started...
-  
-  🌍 DISCOVER: Searching DuckDuckGo for "junior software engineer careers"
-      🆕 Found: coolstartup.io
-      🆕 Found: techcompany.dev
-  
-  🕸️ CRAWL: Checking coolstartup.io/careers...
-      ✅ Found 3 job links
-  
-  🧩 PARSE: Extracting from Greenhouse, Lever, Ashby, Workable...
-      📊 Total raw: 847 jobs | Deduped: 412
-  
-  🎯 FILTER:
-      📊 Rule scoring: 312 rejected (too senior)
-      🔎 Experience: 28 rejected (3+ years required)  
-      ✈️ Visa: 19 rejected (no sponsorship)
-      🤖 Ollama: 8 rejected (AI said NOPE)
-  
-  ✅ 45 jobs passed all filters!
-  
-  💾 Saved 12 new jobs (33 were duplicates)
-  📱 Telegram: 12 notifications sent
-  📊 Excel exported: jobs_export.xlsx
-  
-  ⏳ Sleeping 2 minutes...
-
-🌅 6:02 AM — Cycle #48 begins. You're still sleeping. Living your best life.
+job-agent/
+│
+├── 🧠 main.py                          # The brain — runs the 10-step pipeline
+├── ⚙️ config.py                         # All settings, API keys, thresholds
+├── 📦 requirements.txt                  # Dependencies
+├── 🗄️ jobs.db                           # SQLite database (auto-created)
+├── 📊 jobs_export.xlsx                  # Daily Excel export
+├── 🔒 .env                             # Secrets (API keys, Telegram token)
+│
+└── modules/
+    ├── � discovery/
+    │   └── web_discovery.py             # DuckDuckGo → find career domains
+    │
+    ├── 🕸️ crawling/
+    │   └── career_crawler.py            # Async aiohttp → detect career pages
+    │
+    ├── 🧩 parsing/
+    │   ├── greenhouse.py                # Greenhouse ATS API
+    │   ├── lever.py                     # Lever ATS API
+    │   ├── ashby.py                     # Ashby GraphQL API
+    │   ├── workable.py                  # Workable REST API
+    │   └── generic_html.py              # Parse ANY career page on the web
+    │
+    ├── 🎯 filtering/
+    │   ├── rule_scoring.py              # Weighted title + JD scoring
+    │   ├── experience_parser.py         # Years extraction, intern auto-pass
+    │   ├── visa_filter.py               # Sponsorship scoring
+    │   └── ollama_validator.py          # 🤖 Local AI — final authority
+    │
+    ├── 📱 notifier.py                   # Telegram bot notifications
+    ├── 📊 exporter.py                   # Excel export
+    └── 💾 tracker.py                    # SQLite database layer
 ```
 
-> *The agent has applied to more jobs before breakfast than most people do in a week.* 🏆
+</details>
+
+> *"But wait, wasn't this all in one 1700-line file before?"*
+>
+> **Yes. We don't talk about that anymore.** 🫣
 
 ---
 
 ## 🔧 Configuration Deep Dive
 
-### Filtering Thresholds (`config.py`)
+<details>
+<summary><strong>⚙️ Filtering Thresholds (click to expand)</strong></summary>
+<br>
 
 ```python
 MIN_RULE_SCORE = 2          # Minimum weighted score to pass
@@ -464,7 +610,11 @@ CRAWL_CONCURRENCY = 10      # Parallel async requests
 DISCOVERY_BATCH_SIZE = 15   # DDG queries per cycle
 ```
 
-### Target Roles
+</details>
+
+<details>
+<summary><strong>🎯 Target Roles (click to expand)</strong></summary>
+<br>
 
 ```python
 TARGET_LEVELS = [
@@ -476,36 +626,94 @@ TARGET_LEVELS = [
 
 > *Notice how "Senior" is NOT on this list. That's not an accident.* 🎯
 
----
-
-## 📱 Telegram Alerts
-
-Every new valid job triggers a Telegram message:
-
-```
-🚀 New Job Found!
-
-🏢 Company: OpenAI
-💼 Role: Software Engineering Intern
-🌍 Location: San Francisco, CA
-📡 Source: greenhouse
-✈️ Visa: sponsored
-🔗 Apply Here
-
-Score: 12 | AI: 95% | "Entry-level intern role, perfect for 2025 graduate"
-```
+</details>
 
 ---
 
 ## 🧪 Verified & Tested
 
 | Test Suite | Status | Details |
-|------------|--------|---------|
+|:-----------|:------:|:--------|
 | All Imports (11 modules) | ✅ PASS | Every module loads cleanly |
 | Rule Scoring (5 cases) | ✅ PASS | Senior=-17, Intern=+12, Junior=+7 |
 | Experience Parser (5 cases) | ✅ PASS | Intern auto-pass, 5+ years reject |
 | Visa Filter (4 cases) | ✅ PASS | India auto-pass, no-sponsor reject |
 | DB Migration | ✅ PASS | New tables + columns confirmed |
+
+---
+
+## 💡 Key Concepts
+
+<details>
+<summary><strong>🧪 What is the "Rules Engine"?</strong></summary>
+<br>
+
+The rules are simple Python functions that answer one question: **"Is this job right for a fresh graduate?"**
+
+```mermaid
+graph LR
+    A["📥 Raw Job"] --> B{"📊 Rule Score ≥ 2?"}
+    B -->|Yes| C{"🔎 Experience ≤ 3yr?"}
+    B -->|No| X["🗑️ REJECTED"]
+    C -->|Yes| D{"✈️ Visa OK?"}
+    C -->|No| X
+    D -->|Yes| E{"🤖 AI says ACCEPT?"}
+    D -->|No| X
+    E -->|Yes| F["✅ SAVED"]
+    E -->|No| X
+
+    style A fill:#1a1a2e,stroke:#00d9ff,color:#00d9ff
+    style B fill:#1a1a2e,stroke:#ffd700,color:#ffd700
+    style C fill:#1a1a2e,stroke:#c084fc,color:#c084fc
+    style D fill:#1a1a2e,stroke:#60a5fa,color:#60a5fa
+    style E fill:#1a1a2e,stroke:#f472b6,color:#f472b6
+    style F fill:#1a1a2e,stroke:#34d399,color:#34d399
+    style X fill:#2d1b1b,stroke:#ff0000,color:#ff0000
+```
+
+- If yes → the job proceeds to the next stage
+- If no → **REJECTED** with a reason code
+- Each filter is **independent** — you can test them separately
+
+</details>
+
+<details>
+<summary><strong>🔄 What are the "terminal statuses"?</strong></summary>
+<br>
+
+```mermaid
+stateDiagram-v2
+    [*] --> DISCOVERED: Found by agent
+    DISCOVERED --> FILTERED: Passed all 4 filters
+    DISCOVERED --> REJECTED: Failed a filter
+    FILTERED --> NOTIFIED: Sent to Telegram
+    NOTIFIED --> APPLIED: User applied
+    REJECTED --> [*]: Terminal
+    APPLIED --> [*]: Terminal
+```
+
+Once a job is **REJECTED** or **APPLIED**, that's final. The deduplication system ensures no job is processed twice.
+
+</details>
+
+<details>
+<summary><strong>🤖 How does AI caching work?</strong></summary>
+<br>
+
+Every AI validation is cached by job hash:
+
+```
+Job: "Software Intern at OpenAI" 
+  → hash: a1b2c3d4
+  → First time: Calls Ollama → ACCEPT (95%) → Cached ✅
+  → Second time: Cache HIT → Skip AI call → ⚡ Instant
+
+Result: ~3x faster after first scan cycle
+```
+
+If Ollama is offline, the agent **auto-falls back** to rule-based scoring only. No crashes. No data loss.
+
+</details>
 
 ---
 
@@ -533,18 +741,29 @@ Score: 12 | AI: 95% | "Entry-level intern role, perfect for 2025 graduate"
 
 ## 👨‍💻 Author
 
-**Arshad Uzzama Shaik**
+<p align="center">
+  <strong>Arshad Uzzama Shaik</strong>
+  <br/>
+  🎓 B.Tech CSE — AI & ML (2025 Graduate)
+</p>
 
-- 🎓 B.Tech CSE — AI & ML (2025 Graduate)
-- 🔗 [LinkedIn](https://www.linkedin.com/in/arshad-uzzama-shaik-3b767424b/)
-- 🐙 [GitHub](https://github.com/arshadshaik0000)
+<p align="center">
+  <a href="https://www.linkedin.com/in/arshad-uzzama-shaik-3b767424b/"><img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn"/></a>
+  <a href="https://github.com/arshadshaik0000"><img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub"/></a>
+</p>
 
 ---
 
 <p align="center">
-  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=20&pause=1000&color=FFD700&center=true&vCenter=true&width=700&height=40&lines=Built+with+☕+and+💀+determination;Because+job+hunting+shouldn't+be+a+full-time+job;Now+go+touch+grass+while+the+agent+works+🌿" alt="Footer" />
+  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=14&pause=1000&color=FFD700&center=true&vCenter=true&width=600&lines=Built+with+☕+and+💀+determination;Because+job+hunting+shouldn't+be+a+full-time+job;Now+go+touch+grass+while+the+agent+works+🌿;1000%2B+jobs+discovered.+30%2B+countries.+Zero+manual+effort." alt="Footer typing" />
 </p>
 
 <p align="center">
-  <b>⭐ Star this repo if you think job boards should fear AI ⭐</b>
+  <sub>
+    <strong>Autonomous Job Agent</strong> — Hunt smarter, not harder. Let AI do the legwork.
+  </sub>
+</p>
+
+<p align="center">
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:00D9FF,50:667EEA,100:764BA2&height=120&section=footer" alt="Footer Wave" width="100%"/>
 </p>
