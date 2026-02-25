@@ -1,33 +1,60 @@
+# modules/notifier.py
+import sys
+import os
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+import asyncio
+from telegram import Bot
+from config import TELEGRAM_TOKEN, TELEGRAM_CHAT_ID
+
+async def _send(text):
+    """Internal async send."""
+    try:
+        bot = Bot(token=TELEGRAM_TOKEN)
+        await bot.send_message(chat_id=TELEGRAM_CHAT_ID, text=text, parse_mode='Markdown')
+    except Exception as e:
+        print(f"❌ Telegram error: {e}")
+
+def send_message(text):
+    """Send a plain message to Telegram."""
+    asyncio.run(_send(text))
+
 def notify_job_found(job):
-    import asyncio
-    import os
-    from telegram import Bot
-    from dotenv import load_dotenv
-    load_dotenv()
+    """Send detailed job alert to Telegram."""
+    company  = job.get('company', 'Unknown')
+    title    = job.get('job_title', 'Unknown')
+    location = job.get('location', job.get('country', ''))
+    country  = job.get('country', '')
+    url      = job.get('job_url', '')
+    source   = job.get('source', 'unknown').capitalize()
+    posted   = job.get('date_posted', '')
+    visa     = job.get('visa_sponsorship', 'unknown')
 
-    token   = os.getenv("TELEGRAM_TOKEN")
-    chat_id = os.getenv("TELEGRAM_CHAT_ID")
+    # Visa display
+    if visa == 'sponsored':
+        visa_line = "✈️ *Visa:* Sponsorship Available ✅"
+    elif 'india' in country.lower():
+        visa_line = "✈️ *Visa:* Not Required (India) 🇮🇳"
+    else:
+        visa_line = "✈️ *Visa:* Unknown"
 
-    # Escape special chars that break Telegram Markdown
-    def esc(text):
-        if not text:
-            return "N/A"
-        for ch in ['_', '*', '[', ']', '(', ')', '~', '`', '>', '#', '+', '-', '=', '|', '{', '}', '.', '!']:
-            text = text.replace(ch, f'\\{ch}')
-        return text
+    # Date display
+    date_line = f"📅 *Posted:* {posted}" if posted else "📅 *Posted:* Not available"
 
-    msg = (
-        f"🚀 *New Job Found\\!*\n\n"
-        f"🏢 *Company:* {esc(job.get('company', ''))}\n"
-        f"💼 *Role:* {esc(job.get('job_title', ''))}\n"
-        f"🌍 *Location:* {esc(job.get('country', ''))}\n"
-        f"📡 *Source:* {esc(job.get('source', ''))}\n"
-        f"✈️ *Visa:* {esc(job.get('visa_sponsorship', ''))}\n"
-        f"🔗 [Apply Here]({job.get('job_url', '')})"
-    )
+    message = f"""
+🚀 *New Job Found!*
 
-    async def _send():
-        bot = Bot(token=token)
-        await bot.send_message(chat_id=chat_id, text=msg, parse_mode='MarkdownV2')
+🏢 *Company:* {company}
+💼 *Role:* {title}
+🌍 *Location:* {location}
+🗺 *Country:* {country}
+{visa_line}
+{date_line}
+📡 *Source:* {source}
+🔗 [Apply Here]({url})
+"""
+    send_message(message)
 
-    asyncio.run(_send())
+if __name__ == "__main__":
+    send_message("🧪 Notifier module working!")
+    print("✅ Notifier tested!")
